@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="dudu.css">
+    <title>Portfolio Website</title>
+</head>
+<body>
+
+  <!-- 🌟 跑馬燈 -->
+<div class="marquee">
+  <span id="marqueeText">
+    🌟 歡迎!  只能說王偉翔好帥 🌟
+  </span>
+</div>
+
+<div class="main-content">
+  <!-- 你的主要內容 -->
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const marqueeText = document.getElementById("marqueeText");
+    const duration = 15000; // 跑馬燈跑完時間（毫秒）
+
+    // 先顯示靜止的文字（避免載入空白）
+    marqueeText.style.transform = "translateX(0)";
+    marqueeText.style.transition = "none";
+
+    // 稍等一下再啟動動畫
+    setTimeout(() => {
+      startMarquee();
+    }, 100); // 0.1 秒後開始
+       
+    function startMarquee() {
+      marqueeText.style.transition = "transform 15s linear";
+      marqueeText.style.transform = "translateX(-100%)";
+
+      setTimeout(() => {
+        // 跑完 → 停 3 秒 → 回到右邊再來一次
+        marqueeText.style.transition = "none";
+        marqueeText.style.transform = "translateX(100%)";
+        setTimeout(startMarquee, 3000);
+      }, duration);
+    }
+  });
+</script>
+
+<style>
+.marquee {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  font-size: 18px;
+  padding: 10px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  z-index: 9999;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px #fff;
+}
+
+.main-content {
+  margin-top: 60px;
+}
+</style>
+
+    <style>
+        body {
+          margin: 0;
+          font-family: Arial, sans-serif;
+          background: black;
+          color: white;
+        }
+    
+        /* 頂部導覽列 */
+        .navbar {
+          display: flex;
+          align-items: center;
+          padding: 10px 20px;
+          background: black;
+        }
+    
+        .logo {
+          font-size: 50px;
+          font-weight: bold;
+          margin-left: 10px;
+        }
+    
+        /* 漢堡選單按鈕 */
+        .menu-toggle {
+          display: inline-block;
+          cursor: pointer;
+          padding: 10px;
+          background: black;
+          border: 1px solid white;
+          border-radius: 6px;
+        }
+    
+        .menu-toggle div {
+          width: 25px;
+          height: 3px;
+          background: white;
+          margin: 5px 0;
+          transition: 0.4s;
+        }
+    
+        /* 變成 X 狀態 */
+        .menu-toggle.change .bar1 {
+          transform: rotate(-45deg) translate(-5px, 6px);
+        }
+    
+        .menu-toggle.change .bar2 {
+          opacity: 0;
+        }
+    
+        .menu-toggle.change .bar3 {
+          transform: rotate(45deg) translate(-5px, -6px);
+        }
+    
+        /* 下拉選單 */
+        .dropdown {
+          display: none;
+          margin-top: 10px;
+          border: 1px solid white;
+          background: black;
+          border-radius: 6px;
+          padding: 10px;
+          width: 150px;
+    
+          /* 動畫效果 */
+          opacity: 0;
+          transform: translateY(-10px);
+          transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+    
+        .dropdown a {
+          display: block;
+          text-decoration: none;
+          color: white;
+          padding: 8px;
+        }
+    
+        .dropdown a:hover {
+          background: #333;
+        }
+    
+        /* 顯示選單 */
+        .dropdown.show {
+          display: block;
+          opacity: 1;
+          transform: translateY(0);
+        }
+      </style>
+    </head>
+    <body>
+    
+      <!-- 導覽列 -->
+      <div class="navbar">
+        <!-- 漢堡選單 -->
+        <div class="menu-toggle" id="menuBtn" onclick="toggleMenu(event)">
+          <div class="bar1"></div>
+          <div class="bar2"></div>
+          <div class="bar3"></div>
+        </div>
+    
+        <!-- Logo -->
+        
+        <!--poor html...>
+        <!-下拉選單 -->
+      <div class="dropdown" id="dropdownMenu">
+        <a href="dudu.html">首頁</a>
+        <a href="#">自我介紹</a>
+        <a href="shop.html">商店</a>
+        <a href="#">登入</a>
+        <a href="#">原代碼出處</a>
+        <a href="#">這是為手機設計的</a>
+      </div>
+    
+      <script>
+        function toggleMenu(event) {
+          event.stopPropagation();
+          const menuBtn = document.getElementById("menuBtn");
+          const menu = document.getElementById("dropdownMenu");
+    
+          menuBtn.classList.toggle("change");
+          menu.classList.toggle("show");
+        }
+    
+        // 點擊空白處時自動收起
+        document.addEventListener("click", function(e) {
+          const menuBtn = document.getElementById("menuBtn");
+          const menu = document.getElementById("dropdownMenu");
+    
+          if (menu.classList.contains("show") && !menu.contains(e.target) && !menuBtn.contains(e.target)) {
+            menu.classList.remove("show");
+            menuBtn.classList.remove("change");
+          }
+        });
+      </script>
+
+
+
+    <header>
+        <a href="#" class="logo">Dudu</a>
+
+        <nav>
+            <a href="dudu.html" class="active"> 首頁</a> 
+            <a href="自我介紹.html" >自我介紹</a>
+            <a href="shop.html" >商店</a>
+            <a href="登入.html" >登入</a>
+            <a href="https://www.youtube.com/watch?v=-u3vE84Wo_U&t=470s">原代碼出處</a>
+        </nav>
+    </header>
+  </section>
+    <section class="home">
+        <div class="home-img">
+            <img src="5.jpg" alt="">
+        </div>
+        <div class="home-content">
+            <h1>Hi, It's <span>Dudu</span></h1>
+            <h3 class="typing-text">I'm a <span></span></h3>
+            <p></p>
+            <div class="social-icons">
+                <a href="https://www.tiktok.com/@wang._.0418"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://www.instagram.com/wang._.0418/"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.youtube.com/@DuDuMusic-n7p"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+            <a href="https://www.instagram.com/wang._.0418/" class="btn">Help you</a>
+        </div>
+    </section>
+</body>
+</html>

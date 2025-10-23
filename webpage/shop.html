@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>商店</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background-color: black;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .search-bar {
+      flex-grow: 1;
+      margin: 0 1rem;
+      position: relative;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 0.5rem 2.5rem 0.5rem 1rem;
+      border-radius: 4px;
+      border: none;
+    }
+
+    .search-bar i {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+    }
+
+    .cart {
+      font-size: 1.2rem;
+    }
+
+    .category-bar {
+      background-color: white;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .category-bar div {
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      background-color: #f5f5f5;
+      transition: 0.3s;
+    }
+
+    .category-bar div:hover,
+    .category-bar div.active {
+      background-color: #f53d2d;
+      color: white;
+    }
+
+    .main {
+      padding: 1rem;
+    }
+
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+
+    .product {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .product img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-name {
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .product-price {
+      color: #f53d2d;
+      font-weight: bold;
+    }
+
+    .product[data-category] {
+      display: none;
+    }
+
+    .product.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+  <a href="dudu.html" style="color: white; text-decoration: none;">Dudu</a>
+</div>
+    <div class="search-bar">
+      <input type="text" placeholder="搜尋商品..." id="searchInput">
+      <i class="fa fa-search"></i>
+    </div>
+    <div class="cart">
+      <i class="fa fa-shopping-cart"></i>
+    </div>
+  </header>
+
+  <div class="category-bar">
+    <div class="category-item active" data-category="all">全部</div>
+    <div class="category-item" data-category="帥哥">帥哥</div>
+    <div class="category-item" data-category="手機">手機</div>
+    <div class="category-item" data-category="女裝">女裝</div>
+    <div class="category-item" data-category="美妝">美妝</div>
+    <div class="category-item" data-category="居家">居家</div>
+    <div class="category-item" data-category="3C產品">3C產品</div>
+  </div>
+
+  <main class="main">
+    <div class="product-list">
+      <div class="product show" data-category="帥哥">
+        <img src="4.jpg" alt="商品圖">
+        <div class="product-name">商品 1 - 帥哥</div>
+        <div class="product-price">$199</div>
+      </div>
+      <div class="product show" data-category="帥哥">
+        <img src="3.jpg" alt="商品圖">
+        <div class="product-name">商品 2 - 帥哥</div>
+        <div class="product-price">$1</div>
+      </div>
+      <div class="product show" data-category="帥哥">
+        <img src="2.jpg" alt="商品圖">
+        <div class="product-name">商品 3 - 帥哥</div>
+        <div class="product-price">$29999999</div>
+      </div>
+      <!-- 更多商品可依此增加 -->
+    </div>
+  </main>
+
+  <script>
+    const categoryItems = document.querySelectorAll('.category-item');
+    const products = document.querySelectorAll('.product');
+
+    categoryItems.forEach(item => {
+      item.addEventListener('click', () => {
+        categoryItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        const category = item.dataset.category;
+
+        products.forEach(product => {
+          product.classList.remove('show');
+          if (category === 'all' || product.dataset.category === category) {
+            product.classList.add('show');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

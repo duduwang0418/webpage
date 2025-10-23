@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>忘記密碼 | Dudu</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="登入.css">
+    <style>
+        /* 額外設定：讓「聯絡客服」變白色，並與返回登入一致 */
+        .two-col .one a,
+        .top a {
+            color: white;
+            text-decoration: underline;
+        }
+        .two-col .one a:hover,
+        .top a:hover {
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <!-- 導覽列 -->
+    <nav class="nav">
+        <div class="nav-logo">
+            <p>Dudu</p>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <ul>
+                <li><a href="dudu.html" class="link active">首頁</a></li>
+                <li><a href="自我介紹.html" class="link">自我介紹</a></li>
+                <li><a href="shop.html" class="link">電商</a></li>
+                <li><a href="https://www.youtube.com/watch?v=zi3tKRp0fIY" class="link">原代碼出處</a></li>
+            </ul>
+        </div>
+        <div class="nav-button">
+            <button class="btn white-btn" onclick="location.href='index.html'">Sign In</button>
+            <button class="btn" onclick="location.href='index.html'">Sign Up</button>
+        </div>
+        <div class="nav-menu-btn">
+            <i class="bx bx-menu" onclick="myMenuFunction()"></i>
+        </div>
+    </nav>
+
+    <!-- 忘記密碼區塊 -->
+    <div class="form-box">
+        <div class="login-container" id="forgot">
+            <div class="top">
+                <span>記得密碼了？<a href="登入.html">返回登入</a></span>
+                <header>忘記密碼</header>
+            </div>
+            <div class="input-box">
+                <input type="email" class="input-field" placeholder="輸入註冊的 Email">
+                <i class="bx bx-envelope"></i>
+            </div>
+            <div class="input-box">
+                <input type="submit" class="submit" value="發送重設連結">
+            </div>
+            <div class="two-col">
+                <div class="one">
+                    <label><a href="https://www.instagram.com/wang._.0418/">聯絡客服</a></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function myMenuFunction() {
+    var i = document.getElementById("navMenu");
+    if (i.className === "nav-menu") {
+        i.className += " responsive";
+    } else {
+        i.className = "nav-menu";
+    }
+}
+</script>
+
+</body>
+</html>

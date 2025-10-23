@@ -1,6 +1,17 @@
 /* POPPINS FONT */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+.logo-link {
+  text-decoration: none;   /* 去掉底線 */
+  color: white;            /* 文字顏色保持白色 */
+  font-size: 30px;         /* 調整字體大小 */
+  font-weight: bold;       /* 可選：讓字更明顯 */
+}
+
+.logo-link:hover {
+  color: #ddd;             /* 滑過時變成淡灰色（可自行改） */
+}
+
 *{  
     margin: 0;
     padding: 0;

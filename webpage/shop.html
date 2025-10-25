@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>商店 | Dudu</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- 移除錯誤的 stylesheet 連結（之前誤把 shop.js 當成 CSS 引入） -->
+
   <style>
     * {
       box-sizing: border-box;
@@ -53,8 +55,40 @@
       color: #888;
     }
 
+    /* 清除按鈕位置 */
+    .search-bar button#clearSearch {
+      position: absolute;
+      right: 36px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #666;
+      padding: 4px 6px;
+    }
+    .search-bar button#clearSearch:focus {
+      outline: 2px solid #f53d2d;
+      border-radius: 4px;
+    }
+
     .cart {
       font-size: 1.2rem;
+    }
+    /* cart 數量小徽章 */
+    .cart .count {
+      display: inline-block;
+      min-width: 18px;
+      height: 18px;
+      line-height: 18px;
+      font-size: 12px;
+      background: #f53d2d;
+      color: #fff;
+      border-radius: 9px;
+      text-align: center;
+      margin-left: 6px;
+      padding: 0 6px;
     }
 
     .category-bar {
@@ -122,6 +156,31 @@
     .product.show {
       display: block;
     }
+    mark.highlight { background: #ffeb3b; color: inherit; padding: 0.05rem 0; }
+    .no-results { font-style: italic; }
+    /* Modal 樣式 */
+    .modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 1200; }
+    .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); }
+    .modal-panel { position: relative; background: #fff; padding: 1rem 1.2rem; border-radius: 8px; width: 320px; max-width: calc(100% - 40px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 2; }
+    .modal-title { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .modal-body { margin-bottom: 0.75rem; color: #333; }
+    .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+    .btn { padding: 0.45rem 0.7rem; border-radius: 4px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
+    .btn.primary { background: #f53d2d; color: #fff; border-color: #f53d2d; }
+    .modal-panel:focus { outline: none; }
+  /* Popover 用於顯示在商品下方 */
+  .popover { position: absolute; z-index: 1200; }
+  .popover-panel { background:#fff; border-radius:8px; padding:0.8rem; box-shadow:0 8px 24px rgba(0,0,0,0.15); width:260px; }
+  .popover-title { font-size:1rem; margin:0 0 0.25rem 0 }
+  .popover-body { margin-bottom:0.5rem }
+  .popover-actions { display:flex; gap:0.5rem; justify-content:flex-end }
+
+  /* 購物車下拉面板 */
+  .cart-panel { position:absolute; right:1rem; top:60px; width:280px; z-index:1300; }
+  .cart-panel-inner { background:#fff; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.15); padding:0.75rem; }
+  .cart-item { display:flex; justify-content:space-between; align-items:center; padding:0.35rem 0; border-bottom:1px solid #f0f0f0 }
+  .cart-item:last-child { border-bottom:none }
+  .cart-item button.remove { background:transparent;border:none;color:#f53d2d;cursor:pointer }
   </style>
 </head>
 <body>
@@ -130,11 +189,13 @@
   <a href="dudu.html" style="color: white; text-decoration: none;">Dudu</a>
 </div>
     <div class="search-bar">
-      <input type="text" placeholder="搜尋商品..." id="searchInput">
-      <i class="fa fa-search"></i>
+      <input type="text" placeholder="搜尋商品..." id="searchInput" aria-label="搜尋商品" />
+      <button id="clearSearch" aria-label="清除搜尋" title="清除搜尋" type="button" style="display:none">✕</button>
+      <i class="fa fa-search" aria-hidden="true"></i>
     </div>
-    <div class="cart">
-      <i class="fa fa-shopping-cart"></i>
+    <div class="cart" id="cartButton" style="position:relative;cursor:pointer;">
+      <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+      <!-- badge 會由 JS 動態填入（如果尚未存在） -->
     </div>
   </header>
 
@@ -149,50 +210,67 @@
   </div>
 
   <main class="main">
-    <div class="product-list">
-      <div class="product show" data-category="帥哥">
+    <div id="resultsInfo" aria-live="polite" style="margin-bottom:0.5rem;color:#333"></div>
+    <div class="product-list" id="productList">
+  <div class="product show" data-id="p1" data-category="帥哥" data-price="$19億">
         <img src="4.jpg" alt="商品圖">
-        <div class="product-name">商品 1 - 帥哥</div>
+        <div class="product-name">商品1 - 帥哥</div>
         <div class="product-price">$19億</div>
       </div>
-      <div class="product show" data-category="帥哥">
+  <div class="product show" data-id="p2" data-category="帥哥" data-price="$10億">
         <img src="3.jpg" alt="商品圖">
-        <div class="product-name">商品 2 - 帥哥</div>
+        <div class="product-name">商品2 - 帥哥</div>
         <div class="product-price">$10億</div>
       </div>
-      <div class="product show" data-category="帥哥">
+  <div class="product show" data-id="p3" data-category="帥哥" data-price="$29億">
         <img src="2.jpg" alt="商品圖">
-        <div class="product-name">商品 3 - 帥哥</div>
+        <div class="product-name">商品3 - 帥哥</div>
         <div class="product-price">$29億</div>
       </div>
-      <div class="product show" data-category="帥哥">
+      <div class="product show" data-id="p4" data-category="帥哥" data-price="$0">
         <img src="7.jpg" alt="商品圖">
-        <div class="product-name">商品 4 - 帥哥</div>
-        <div class="product-price">$13億</div>
+        <div class="product-name">商品4 - 帥哥</div>
+        <div class="product-price">$0</div>
       </div>
-      <!-- 更多商品可依此增加 -->
+
     </div>
+    <div id="noResults" class="no-results" aria-hidden="true" style="display:none;margin-top:1rem;text-align:center;color:#666">找不到符合的商品</div>
   </main>
 
-  <script>
-    const categoryItems = document.querySelectorAll('.category-item');
-    const products = document.querySelectorAll('.product');
+  <!-- 商品加入購物車彈出框（popover） -->
+  <div id="productPopover" class="popover" aria-hidden="true" style="display:none;">
+    <div class="popover-panel" role="dialog" aria-modal="false" aria-labelledby="popoverTitle">
+      <h3 id="popoverTitle" class="popover-title">商品名稱</h3>
+      <div class="popover-body">
+        <p>價格：<strong class="popover-price"></strong></p>
+        <p>確定要加入購物車嗎？</p>
+      </div>
+      <div class="popover-actions">
+        <button id="popoverAddBtn" class="btn primary">加入購物車</button>
+        <button id="popoverCancelBtn" class="btn">取消</button>
+      </div>
+    </div>
+  </div>
 
-    categoryItems.forEach(item => {
-      item.addEventListener('click', () => {
-        categoryItems.forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
+  <!-- 購物車下拉面板（點 header 的購物車圖示展開） -->
+  <div id="cartPanel" class="cart-panel" style="display:none;" aria-hidden="true">
+    <div class="cart-panel-inner">
+      <h4>購物車</h4>
+      <ul id="cartList" style="list-style:none;padding:0;margin:0 0 0.5rem 0;"></ul>
+      <div id="cartEmpty" style="color:#666;font-size:0.95rem;">購物車目前為空</div>
+      <div style="margin-top:0.5rem">
+        <button id="goToCartBtn" class="btn primary" style="width:100%">前往購物車</button>
 
-        const category = item.dataset.category;
+<script>
+  document.getElementById("goToCartBtn").addEventListener("click", function() {
+    window.location.href = "購物車.html"; // 改成你要導向的頁面
+  });
+</script>
+      </div>
+    </div>
+  </div>
 
-        products.forEach(product => {
-          product.classList.remove('show');
-          if (category === 'all' || product.dataset.category === category) {
-            product.classList.add('show');
-          }
-        });
-      });
-    });
-  </script>
+  <!-- 由 shop.js 處理類別篩選與搜尋 -->
+  <script src="shop.js" defer></script>
 </body>
 </html>

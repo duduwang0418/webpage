@@ -1,0 +1,47 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #000;
+  font-family: 'Poppins', sans-serif;
+}
+
+#container {
+  width: 100vw;
+  height: 100vh;
+}
+
+.controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.control-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.control-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* 響應式 */
+@media (max-width: 640px) {
+  .controls {
+    bottom: 10px;
+    left: 10px;
+    flex-direction: column;
+  }
+
+  .control-button {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}

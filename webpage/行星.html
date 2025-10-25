@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>模擬行星軌跡 | Dudu</title>
+  <link rel="stylesheet" href="行星.css">
+  <style>
+    /* 控制面板小樣式覆蓋 */
+    .controls-panel { position: absolute; right: 20px; top: 20px; z-index:1400; background: rgba(0,0,0,0.6); color:#fff; padding:12px; border-radius:8px; width:260px; font-family:Arial, sans-serif; transition: width 240ms ease, padding 240ms ease, opacity 240ms ease }
+    .controls-panel h3 { margin:0 0 8px 0; font-size:14px }
+    .controls-panel label { display:block; font-size:12px; margin-top:8px }
+    .controls-panel input[type=range] { width:100% }
+    .controls-panel .row { display:flex; gap:8px; align-items:center }
+    .controls-panel button { margin-top:8px; width:100%; }
+    .color-input { width:40px; height:28px; border:none; padding:0 }
+    #container { width:100vw; height:100vh; display:block }
+    /* collapsed style */
+    .controls-panel.collapsed { width:44px; padding:6px 6px; overflow:visible }
+    .controls-panel.collapsed h3 { display:none }
+    .controls-panel.collapsed .control-button, .controls-panel.collapsed input, .controls-panel.collapsed label, .controls-panel.collapsed .row, .controls-panel.collapsed .color-input { display:none }
+    .controls-panel.collapsed #controlsBody { display:none }
+    /* ensure the toggle button (positioned left) remains visible */
+    #panelToggle { transition: transform 180ms ease }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+
+  <div class="controls-panel" aria-label="Controls">
+  <button id="panelToggle" aria-expanded="true" aria-controls="controlsBody" title="收合/展開選單" style="position:absolute;left:-36px;top:8px;width:34px;height:34px;border-radius:6px;border:none;cursor:pointer;background:rgba(0,0,0,0.6);color:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.4)">◀</button>
+  <span id="panelLabel" style="position:absolute;left:-4px;top:12px;color:#fff;font-size:12px;background:rgba(0,0,0,0.45);padding:4px 6px;border-radius:4px;display:none">這是選單</span>
+    <h3 style="margin-left:6px">行星 | 控制</h3>
+    <div id="controlsBody">
+    <label>旋轉速度 <span id="speedVal">0.5</span></label>
+    <input id="speed" type="range" min="0" max="5" step="0.01" value="0.5">
+
+  <label>粒子數量 <span id="countVal">4000</span></label>
+  <input id="count" type="range" min="1000" max="30000" step="500" value="4000">
+
+    <label>分支數量 <span id="branchVal">5</span></label>
+    <input id="branches" type="range" min="1" max="8" step="1" value="5">
+
+    <label>內側顏色 / 外側顏色</label>
+    <div class="row">
+      <input id="colorInside" class="color-input" type="color" value="#ff6030">
+      <input id="colorOutside" class="color-input" type="color" value="#1b3984">
+      <button id="applyColors" class="control-button">套用顏色</button>
+    </div>
+
+    <div class="row" style="margin-top:8px">
+      <button id="toggleRotation" class="control-button">暫停/繼續旋轉</button>
+      <a href="dudu.html" class="control-button">回到首頁</a>
+
+<style>
+.control-button {
+  display: inline-block;
+  padding: 7px 20px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.control-button:hover {
+  background-color: #0056b3;
+}
+</style>
+    </div>
+    <label>軌道顏色</label>
+    <div class="row">
+      <input id="orbitColor" class="color-input" type="color" value="#555555">
+      <label style="font-size:12px; align-self:center; margin-left:8px">寬度</label>
+      <input id="orbitWidth" type="range" min="1" max="8" step="1" value="1" style="flex:1">
+    </div>
+    <button id="applyOrbit" class="control-button">套用軌道樣式</button>
+
+    <button id="rebuild" class="control-button">重新生成星系</button>
+    </div>
+  </div>
+
+  <!-- three.js & controls from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.154.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.154.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="1.js"></script>
+  <script>
+    // bind UI to functions exposed by 1.js
+    const speed = document.getElementById('speed');
+    const speedVal = document.getElementById('speedVal');
+    const countEl = document.getElementById('count');
+    const countVal = document.getElementById('countVal');
+    const branches = document.getElementById('branches');
+    const branchVal = document.getElementById('branchVal');
+
+    speed.addEventListener('input', (e) => {
+      const v = Number(e.target.value);
+      speedVal.textContent = v.toFixed(2);
+      if (window.setRotationSpeed) window.setRotationSpeed(v);
+    });
+
+    countEl.addEventListener('input', (e) => {
+      const v = Number(e.target.value);
+      countVal.textContent = v;
+    });
+
+    branches.addEventListener('input', (e) => {
+      branchVal.textContent = e.target.value;
+    });
+
+    document.getElementById('rebuild').addEventListener('click', () => {
+      const opts = {
+        count: Number(countEl.value),
+        branches: Number(branches.value)
+      };
+      if (window.rebuildGalaxy) window.rebuildGalaxy(opts);
+    });
+
+    document.getElementById('applyOrbit').addEventListener('click', () => {
+      const c = document.getElementById('orbitColor').value;
+      const w = Number(document.getElementById('orbitWidth').value);
+      if (window.setOrbitStyle) window.setOrbitStyle(c, w);
+    });
+
+    document.getElementById('applyColors').addEventListener('click', () => {
+      const inside = document.getElementById('colorInside').value;
+      const outside = document.getElementById('colorOutside').value;
+      if (window.setColors) window.setColors(inside, outside);
+      // optionally rebuild to reflect colors more strongly
+      if (window.rebuildGalaxy) window.rebuildGalaxy({});
+    });
+
+    document.getElementById('toggleRotation').addEventListener('click', () => {
+      if (window.toggleRotation) window.toggleRotation();
+    });
+
+    document.getElementById('resetView').addEventListener('click', () => {
+      if (window.resetView) window.resetView();
+    });
+
+    // panel toggle: collapse / expand
+    (function() {
+      const panel = document.querySelector('.controls-panel');
+      const toggle = document.getElementById('panelToggle');
+      const label = document.getElementById('panelLabel');
+      const body = document.getElementById('controlsBody');
+      // restore previous state
+      try {
+        const stored = localStorage.getItem('galaxyPanelCollapsed');
+        if (stored === 'true') {
+          panel.classList.add('collapsed');
+          toggle.textContent = '▶';
+          toggle.setAttribute('aria-expanded','false');
+          try { label.style.display = 'block'; } catch (e) {}
+        }
+      } catch (e) {}
+
+      toggle.addEventListener('click', () => {
+        const isCollapsed = panel.classList.toggle('collapsed');
+        toggle.textContent = isCollapsed ? '▶' : '◀';
+        toggle.setAttribute('aria-expanded', String(!isCollapsed));
+        try { localStorage.setItem('galaxyPanelCollapsed', isCollapsed ? 'true' : 'false'); } catch (e) {}
+        try { label.style.display = isCollapsed ? 'block' : 'none'; } catch (e) {}
+      });
+    })();
+  </script>
+</body>
+</html>

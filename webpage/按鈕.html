@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>按紐頁面 | Dudu</title>
+
+  <style>
+button {
+  margin: 0 20px; /* 左右各10px縫隙 */
+}
+</style>
+
   <style>
     :root {
       --x: 0;
@@ -76,12 +83,18 @@
       border-radius: 1rem;
       z-index: -1;
     }
+    
+</style>
+
   </style>
 </head>
 <body>
   <!-- 這裡加上 onclick -->
   <button onclick="window.location.href='dudu.html'">
     <span>按一下</span>
+  </button>
+  <button onclick="window.location.href='行星.html'">
+    <span>模擬行星軌跡</span>
   </button>
 
   <script>
